@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using XnesServer.Interfaces;
 using XnesServer.Models;
 
 namespace XnesServer
@@ -27,6 +28,7 @@ namespace XnesServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+             
             var connectionString = Configuration["ConnectionString"];
             services.AddDbContext<XnesContext>(x => x.UseSqlServer(connectionString));
             services.AddCors(options =>
@@ -37,7 +39,6 @@ namespace XnesServer
                 });
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            //services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +53,6 @@ namespace XnesServer
                 app.UseHsts();
             }
             app.UseAuthentication();
-
             app.UseCors();
 
             app.UseHttpsRedirection();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using XnesServer.Interfaces;
 using XnesServer.Models;
 using XnesServer.Services;
 
@@ -14,24 +15,33 @@ namespace XnesServer.Controllers
     public class XnesController : ControllerBase
     {
 
-        private XnesService _xnesService;
-
-        //public XnesController(XnesService xnesService)
-        public XnesController(XnesService xnesService)
+        private IXnesService _xnesService;
+        //
+        //public XnesController(IXnesService xnesService)
+        //{
+        //    _xnesService = xnesService;
+        //}
+        public XnesController(XnesContext xnesService)
         {
-            _xnesService = xnesService;
+            Console.Write("");
+            _xnesService = new XnesService(xnesService);
         }
 
         // POST api/values
-        
+
         [HttpPost]
         [Route("AddCustomer")]
-        public ActionResult AddCustomer([FromBody] Customers customer)
+        public ActionResult AddCustomer(object customer)
         {
-            Console.Write(customer);
+Customers c= Newtonsoft.Json.JsonConvert.DeserializeObject<Customers>(customer.ToString());
+            
+
             try
             {
-                _xnesService.AddCustomer(customer);
+               Customers getCustomer= _xnesService.GetCustomer(c.Tz);
+                if(getCustomer!=null)
+                     return StatusCode(409,"User already exists.");
+                _xnesService.AddCustomer(c);
                 return Ok();
             }
             catch (Exception ex)
@@ -42,22 +52,23 @@ namespace XnesServer.Controllers
 
 
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        [Route("GetCustomer")]
-        public ActionResult<string> GetCustomer(int id)
+        //GET api/values/5
+        [HttpGet]
+        [Route("GetCustomers")]
+        public List<Customers> GetCustomers()
         {
-            return "value";
+            List<Customers> customrs = _xnesService.GetAllCustomers();
+            return customrs;
         }
 
-        // GET api/values/5
+        ////GET api/values/5
         [HttpGet]
         [Route("GetCities")]
-        public ActionResult<string> GetCities(int id)
+        public List<Cities> GetCities()
         {
-            return "value";
+            Console.WriteLine("enterrr");
+            List<Cities> cities = _xnesService.GetAllCities();
+            return cities;
         }
-
-
     }
 }

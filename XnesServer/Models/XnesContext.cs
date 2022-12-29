@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 namespace XnesServer.Models
 {
     using Microsoft.EntityFrameworkCore;
+    using XnesServer.Interfaces;
 
     public class XnesContext
         : DbContext

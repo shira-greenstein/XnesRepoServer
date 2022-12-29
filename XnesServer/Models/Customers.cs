@@ -8,6 +8,7 @@ namespace XnesServer.Models
 {
     public class Customers
     {
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -20,7 +21,5 @@ namespace XnesServer.Models
         public int BankBranch { get; set; }
         public string AccountNumber { get; set; }
         public virtual Cities Cities { get; set; }
-
-
     }
 }
